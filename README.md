@@ -25,37 +25,38 @@ Annotating the controller
 -------------------------
 
 First up annotate your controller like so:
+```php
+<?php
 
-    <?php
+namespace DemoModule\Controller;
 
-    namespace DemoModule\Controller;
+use TjoAnnotationRouter\Annotation as Router;
 
-    use TjoAnnotationRouter\Annotation as Router;
+/**
+ * @Router\Controller("DemoModule\Controller\TestController")
+ * @Router\Base("demo")
+ */
+class TestController extends AbstractActionController
+{
+    /**
+     * @Router\Route(type="literal", name="index", route="/index")
+     */
+    public function indexAction()
+    {
+        // Action stuff here
+    }
 
     /**
-     * @Router\Controller("DemoModule\Controller\TestController")
-     * @Router\Base("demo")
+     * @Router\Route(type="segment", name="another-page", route="/page1/:id")
+     * @Router\Constraint(param="id", rule="[0-9]+")
+     * @Router\DefaultValue(param="id", value="7")
      */
-    class TestController extends AbstractActionController
+    public function anotherPageAction()
     {
-        /**
-         * @Router\Route(type="literal", name="index", route="/index")
-         */
-        public function indexAction()
-        {
-            // Action stuff here
-        }
-
-        /**
-         * @Router\Route(type="segment", name="another-page", route="/page1/:id")
-         * @Router\Constraint(param="id", rule="[0-9]+")
-         * @Router\DefaultValue(param="id", value="7")
-         */
-        public function anotherPageAction()
-        {
-            // More action stuff here
-        }
+        // More action stuff here
     }
+}
+```
 
 The Annotations
 ---------------
@@ -73,12 +74,14 @@ The only configuration required is to tell the module which controllers are to
 be parsed by the AnnotationRouter. To do this simply add the following to your
 project/module config:
 
+```php
     'tjo_annotation_router' => array(
         'controllers' => array(
             'DemoModule\Controller\TestController',
             // Add more here if necessary
         ),
     ),
+```
 
 **Note: Here you must use the class name and NOT the controller name specified in your ZF2 config**
 
