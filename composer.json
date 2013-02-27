@@ -1,0 +1,28 @@
+{
+    "name": "tomphp/tjo-annotation-router",
+    "description": "ZF2 module which lets routing be configured by via annotations on your controller classes..",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/tomphp/TjoAnnotationRouter",
+    "authors": [
+        {
+            "name": "Tom Oram",
+            "email": "tom@x2k.co.uk",
+            "homepage": "http://github.com/tomphp"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "zendframework/zendframework": "2.*",
+        "doctrine/common": ">=2.1"
+    },
+    "autoload": {
+        "psr-0": {
+            "TjoAnnotation\\": "src/"
+        }
+    },
+    "require-dev": {
+        "phpmd/phpmd" : "1.4.0",
+        "squizlabs/php_codesniffer": "1.*"
+    }
+}
