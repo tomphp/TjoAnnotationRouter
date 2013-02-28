@@ -68,6 +68,11 @@ class Module implements
      */
     public function getServiceConfig()
     {
-        return array();
+        return array(
+            'factories' => array(
+                'TjoAnnotationRouter\AnnotationManager' => 'TjoAnnotationRouter\Service\AnnotationManagerFactory',
+                'TjoAnnotationRouter\AnnotationRouter'  => 'TjoAnnotationRouter\Service\AnnotationRouterFactory',
+            ),
+        );
     }
 }
