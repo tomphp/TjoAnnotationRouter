@@ -27,13 +27,16 @@ class Module implements
     public function onBootstrap(EventInterface $e)
     {
         $serviceLocator = $e->getApplication()->getServiceManager();
+
         $config = $serviceLocator->get('Config');
 
-        $annotationRouter = new AnnotationRouter();
-        $routeConfig = $annotationRouter->getRouterConfig($config['tjo_annotation_router']['controllers']);
+        $routes = $serviceLocator->get('Router')->getRoutes();
 
-        $router = $serviceLocator->get('Router');
-        $router->addRoutes($routeConfig);
+        $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
+        $routeConfig = $annotationRouter->updateRoutes(
+            $config['tjo_annotation_router']['controllers'],
+            $routes
+        );
     }
 
     /**

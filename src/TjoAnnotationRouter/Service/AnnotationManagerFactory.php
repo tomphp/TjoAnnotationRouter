@@ -1,6 +1,6 @@
 <?php
 
-namespace TjoAnnotationRouter;
+namespace TjoAnnotationRouter\Service;
 
 use Zend\Code\Annotation\AnnotationManager;
 use Zend\Code\Annotation\Parser\DoctrineAnnotationParser;

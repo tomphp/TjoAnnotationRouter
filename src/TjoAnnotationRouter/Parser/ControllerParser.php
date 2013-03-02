@@ -64,7 +64,7 @@ class ControllerParser
      * @param  AnnotationCollection $annotations
      * @return void
      */
-    protected function parseMethod(
+    public function parseMethod(
             $name,
             AnnotationCollection $annotations,
             ArrayObject $config
@@ -137,12 +137,14 @@ class ControllerParser
         }
 
         do {
+            /*
             if (!isset($settings['type'])) {
                 $settings['type'] = 'literal';
                 // @todo Make it so that route tree parts are customisable
                 $settings['options']['route'] = '/' . $part;
                 $settings['may_terminate'] = true;
             }
+            */
 
             $part = current($routeParts);
 

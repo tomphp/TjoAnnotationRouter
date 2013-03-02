@@ -22,12 +22,10 @@ class AnnotationRouterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $annotationRouter = new AnnotationRouter();
-
         $manager = $serviceLocator->get('TjoAnnotationRouter\AnnotationManager');
 
         $parser = new ControllerParser();
 
-        return $annotationRouter($manager, $parser);
+        return new AnnotationRouter($manager, $parser);
     }
 }

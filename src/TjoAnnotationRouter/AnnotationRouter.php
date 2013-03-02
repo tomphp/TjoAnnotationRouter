@@ -6,6 +6,7 @@ use ArrayObject;
 use Zend\Code\Annotation\AnnotationCollection;
 use Zend\Code\Annotation\AnnotationManager;
 use Zend\Code\Reflection\ClassReflection;
+use Zend\Mvc\Router\PriorityList;
 use TjoAnnotationRouter\Parser\ControllerParser;
 
 /**
@@ -36,18 +37,6 @@ class AnnotationRouter
     }
 
     /**
-     * Retrieve annotation manager
-     *
-     * If none is currently set, creates one with default annotations.
-     *
-     * @return AnnotationManager
-     */
-    protected function getAnnotationManager()
-    {
-        return $this->annotationManager;
-    }
-
-    /**
      * Builds the config for a controller.
      *
      * @param  string $controller
@@ -56,30 +45,29 @@ class AnnotationRouter
      */
     protected function parseController($controller, ArrayObject $config)
     {
-        $annotationManager = $this->getAnnotationManager();
-
         $reflection  = new ClassReflection($controller);
 
-        $annotations = $reflection->getAnnotations($annotationManager);
+        $annotations = $reflection->getAnnotations($this->annotationManager);
 
         if ($annotations instanceof AnnotationCollection) {
             $this->parser->setController($controller, $annotations);
         }
 
         foreach ($reflection->getMethods() as $method) {
-            $annotations = $method->getAnnotations($annotationManager);
+            $annotations = $method->getAnnotations($this->annotationManager);
 
             $this->parser->parseMethod($method->getName(), $annotations, $config);
         }
     }
 
     /**
-     * Returns a router config array from the annotations.
+     * Parses the route annotations and updates the route stack.
      *
-     * @param  string $controllers A list of annotated controllers to process.
-     * @return array
+     * @param  string       $controllers A list of annotated controllers to process.
+     * @param  PriorityList $routes The current routing stack.
+     * @return void
      */
-    public function getRouterConfig(array $controllers)
+    public function updateRoutes(array $controllers, PriorityList $routes)
     {
         $config = new ArrayObject();
 
@@ -87,6 +75,11 @@ class AnnotationRouter
             $this->parseController($controller, $config);
         }
 
-        return $config->getArrayCopy();
+        echo '<pre>';
+        var_dump($config);
+        echo '</pre>';
+        exit();
+
+        // @todo update the routes with the new config
     }
 }
