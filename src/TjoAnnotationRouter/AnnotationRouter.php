@@ -61,6 +61,56 @@ class AnnotationRouter
     }
 
     /**
+     * Compile the information for a new route.
+     *
+     * @param  string $routeName
+     * @param  array  $routeInfo
+     * @return array
+     */
+    protected function newRoute($routeName, array $routeInfo)
+    {
+        unset($newRoute['child_routes']);
+
+        if ($routeInfo['type']) {
+            return $routeInfo;
+        }
+
+        $newRoute = array(
+            'type'          => 'Literal',
+            'may_terminate' => false,
+            'options'       => array(
+                'route' => $routeName, // @todo Allow customisation of intermediate route names.
+            ),
+        );
+    }
+
+    /**
+     * Recursively update the route stack.
+     *
+     * @param  ArrayObject  $routeList
+     * @param  PriorityList $parent
+     * @return RouteInterface
+     */
+    protected function recursiveUpdateRoutes(ArrayObject $routeList, PriorityList $parent)
+    {
+        foreach ($routeList as $routeName => $routeInfo) {
+            if (!$parent->get($routeName)) {
+                #continue;
+                //$parent->insert($this->newRoute($routeName, $routeInfo));
+            }
+
+            #$route = $parent->get($routeName);
+            #var_dump($route);
+
+            /*
+            if (isset($routeInfo['child_routes'])) {
+                $this->recursiveUpdateRoutes($routeInfo['child_routes'], $route);
+            }
+            */
+        }
+    }
+
+    /**
      * Parses the route annotations and updates the route stack.
      *
      * @param  string       $controllers A list of annotated controllers to process.
@@ -69,15 +119,23 @@ class AnnotationRouter
      */
     public function updateRoutes(array $controllers, PriorityList $routes)
     {
-        $config = new ArrayObject();
+        $routeList = new ArrayObject();
 
         foreach ($controllers as $controller) {
-            $this->parseController($controller, $config);
+            $this->parseController($controller, $routeList);
         }
 
-        echo '<pre>';
-        var_dump($config);
-        echo '</pre>';
+        echo "<pre>";
+        //print_r($routeList);
+
+        $this->recursiveUpdateRoutes($routeList, $routes);
+
+        foreach ($routes as $routeName => $route) {
+            echo "ROUTE = " . $routeName . "<br>";
+        }
+
+        echo "</pre>";
+
         exit();
 
         // @todo update the routes with the new config
