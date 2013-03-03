@@ -1,4 +1,10 @@
 <?php
+/**
+ * TjoAnnotationRouter library (https://github.com/tomphp/TjoAnnotationRouter)
+ *
+ * @link https://github.com/tomphp/TjoAnnotationRouter for the canonical source repository
+ * @license http://opensource.org/licenses/MIT The MIT License (MIT)
+ */
 
 namespace TjoAnnotationRouter;
 

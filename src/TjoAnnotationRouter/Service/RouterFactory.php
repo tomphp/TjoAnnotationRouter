@@ -1,4 +1,11 @@
 <?php
+/**
+ * TjoAnnotationRouter library (https://github.com/tomphp/TjoAnnotationRouter)
+ *
+ * @link https://github.com/tomphp/TjoAnnotationRouter for the canonical source repository
+ * @license http://opensource.org/licenses/MIT The MIT License (MIT)
+ */
+
 namespace TjoAnnotationRouter\Service;
 
 use Zend\Mvc\Router\Http\TreeRouteStack as HttpRouter;
@@ -15,6 +22,7 @@ use Zend\Console\Console;
  */
 class RouterFactory implements FactoryInterface
 {
+
     /**
      * Create and return the router
      *
@@ -32,8 +40,7 @@ class RouterFactory implements FactoryInterface
         $config             = $serviceLocator->get('Config');
         $routePluginManager = $serviceLocator->get('RoutePluginManager');
 
-        if (
-            $rName === 'ConsoleRouter' ||                   // force console router
+        if ($rName === 'ConsoleRouter' ||                   // force console router
             ($cName === 'router' && Console::isConsole())       // auto detect console
         ) {
             // We are in a console, use console router.
