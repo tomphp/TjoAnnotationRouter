@@ -29,12 +29,11 @@ class ControllerParser
     /**
      * Set the name of the controller and parse the class annotations.
      *
-     * @param  string               $name
      * @param  AnnotationCollection $annotations
      * @return void
      * @throws Exception\DomainException
      */
-    public function setController($name, AnnotationCollection $annotations)
+    public function setController(AnnotationCollection $annotations)
     {
         $this->baseName = null;
         $this->controllerName = null;
@@ -137,15 +136,6 @@ class ControllerParser
         }
 
         do {
-            /*
-            if (!isset($settings['type'])) {
-                $settings['type'] = 'literal';
-                // @todo Make it so that route tree parts are customisable
-                $settings['options']['route'] = '/' . $part;
-                $settings['may_terminate'] = true;
-            }
-            */
-
             $part = current($routeParts);
 
             $settings = &$settings['child_routes'][$part];

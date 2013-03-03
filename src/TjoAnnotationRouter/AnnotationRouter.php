@@ -7,6 +7,7 @@ use Zend\Code\Annotation\AnnotationCollection;
 use Zend\Code\Annotation\AnnotationManager;
 use Zend\Code\Reflection\ClassReflection;
 use Zend\Mvc\Router\PriorityList;
+use TjoAnnotationRouter\Config\Merger;
 use TjoAnnotationRouter\Parser\ControllerParser;
 
 /**
@@ -25,15 +26,24 @@ class AnnotationRouter
      * @var ControllerParser
      */
     protected $parser;
+    
+    /**
+     * @var Merger
+     */
+    protected $merger;
 
     /**
      * @param AnnotationManager $annotationManager
      * @param ControllerParser  $parser
      */
-    public function __construct(AnnotationManager $annotationManager, ControllerParser $parser)
-    {
+    public function __construct(
+        AnnotationManager $annotationManager,
+        ControllerParser $parser,
+        Merger $merger
+    ) {
         $this->annotationManager = $annotationManager;
         $this->parser = $parser;
+        $this->merger = $merger;
     }
 
     /**
@@ -50,62 +60,13 @@ class AnnotationRouter
         $annotations = $reflection->getAnnotations($this->annotationManager);
 
         if ($annotations instanceof AnnotationCollection) {
-            $this->parser->setController($controller, $annotations);
+            $this->parser->setController($annotations);
         }
 
         foreach ($reflection->getMethods() as $method) {
             $annotations = $method->getAnnotations($this->annotationManager);
 
             $this->parser->parseMethod($method->getName(), $annotations, $config);
-        }
-    }
-
-    /**
-     * Compile the information for a new route.
-     *
-     * @param  string $routeName
-     * @param  array  $routeInfo
-     * @return array
-     */
-    protected function newRoute($routeName, array $routeInfo)
-    {
-        unset($routeInfo['child_routes']);
-
-        if (isset($routeInfo['type'])) {
-            return $routeInfo;
-        }
-
-        return array(
-            'type'          => 'Literal',
-            'may_terminate' => false,
-            'options'       => array(
-                'route' => '/' . $routeName, // @todo Allow customisation of intermediate route names.
-            ),
-        );
-    }
-
-    /**
-     * Recursively update the route stack.
-     *
-     * @todo Typehint routeList, something weird is happening.
-     * @param  ArrayObject $routeList
-     * @param  array       $parent
-     * @return RouteInterface
-     */
-    protected function recursiveUpdateRoutes($routeList, array &$parent)
-    {
-        foreach ($routeList as $routeName => $routeInfo) {
-            if (!isset($parent[$routeName])) {
-                $parent[$routeName] = $this->newRoute($routeName, $routeInfo);
-            }
-
-            if (isset($routeInfo['child_routes'])) {
-                if (!isset($parent[$routeName]['child_routes'])) {
-                    $parent[$routeName]['child_routes'] = array();
-                }
-
-                $this->recursiveUpdateRoutes($routeInfo['child_routes'], $parent[$routeName]['child_routes']);
-            }
         }
     }
 
@@ -132,6 +93,6 @@ class AnnotationRouter
             $config['routes'] = array();
         }
 
-        $this->recursiveUpdateRoutes($routeList, $config['routes']);
+        $this->merger->merge($routeList->getArrayCopy(), $config['routes']);
     }
 }
