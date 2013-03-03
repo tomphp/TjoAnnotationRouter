@@ -25,11 +25,13 @@ class Base
     public function __construct(array $data)
     {
         if (!isset($data['value']) || !is_string($data['value'])) {
-            throw new Exception\DomainException(sprintf(
-                '%s expects the annotation parameter to define a string; received "%s"',
-                get_class($this),
-                gettype($data['value'])
-            ));
+            throw new Exception\DomainException(
+                sprintf(
+                    '%s expects the annotation parameter to define a string; received "%s"',
+                    get_class($this),
+                    gettype($data['value'])
+                )
+            );
         }
 
         $this->name = $data['value'];

@@ -64,9 +64,9 @@ class ControllerParser
      * @return void
      */
     public function parseMethod(
-            $name,
-            AnnotationCollection $annotations,
-            ArrayObject $config
+        $name,
+        AnnotationCollection $annotations,
+        ArrayObject $config
     ) {
         if (!preg_match('/^(.*)Action$/i', $name, $match)) {
             return;
