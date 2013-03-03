@@ -31,7 +31,7 @@ class MergerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \TjoAnnotationBuilder\Config\Merger::merge
+     * @covers TjoAnnotationBuilder\Config\Merger::merge
      */
     public function testMerge2SeperateRoutes()
     {
@@ -74,7 +74,7 @@ class MergerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \TjoAnnotationBuilder\Config\Merger::merge
+     * @covers TjoAnnotationBuilder\Config\Merger::merge
      */
     public function testMergeDoesntOverwriteExisting()
     {
@@ -104,7 +104,7 @@ class MergerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \TjoAnnotationBuilder\Config\Merger::merge
+     * @covers TjoAnnotationBuilder\Config\Merger::merge
      */
     public function testMergeCreatesBranch()
     {
@@ -147,7 +147,7 @@ class MergerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \TjoAnnotationBuilder\Config\Merger::merge
+     * @covers TjoAnnotationBuilder\Config\Merger::merge
      */
     public function testMergeModifiesBranch()
     {
