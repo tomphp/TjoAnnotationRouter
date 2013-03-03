@@ -2,9 +2,7 @@
 
 namespace TjoAnnotationRouter;
 
-use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
-use Zend\ModuleManager\Feature\BootstrapListenerInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
@@ -14,31 +12,10 @@ use Zend\ModuleManager\Feature\ConfigProviderInterface;
  * @author Tom Oram <tom@x2k.co.uk>
  */
 class Module implements
-    BootstrapListenerInterface,
     AutoloaderProviderInterface,
     ConfigProviderInterface,
     ServiceProviderInterface
 {
-    /**
-     * {@inheritDoc}
-     *
-     * @param EventInterface $e
-     */
-    public function onBootstrap(EventInterface $e)
-    {
-        $serviceLocator = $e->getApplication()->getServiceManager();
-
-        $config = $serviceLocator->get('Config');
-
-        $routes = $serviceLocator->get('Router')->getRoutes();
-
-        $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
-        $routeConfig = $annotationRouter->updateRoutes(
-            $config['tjo_annotation_router']['controllers'],
-            $routes
-        );
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -75,6 +52,8 @@ class Module implements
             'factories' => array(
                 'TjoAnnotationRouter\AnnotationManager' => 'TjoAnnotationRouter\Service\AnnotationManagerFactory',
                 'TjoAnnotationRouter\AnnotationRouter'  => 'TjoAnnotationRouter\Service\AnnotationRouterFactory',
+                // Override the built in zf2 router factory
+                'Router'                                => 'TjoAnnotationRouter\Service\RouterFactory',
             ),
         );
     }

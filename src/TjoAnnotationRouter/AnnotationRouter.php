@@ -69,17 +69,17 @@ class AnnotationRouter
      */
     protected function newRoute($routeName, array $routeInfo)
     {
-        unset($newRoute['child_routes']);
+        unset($routeInfo['child_routes']);
 
-        if ($routeInfo['type']) {
+        if (isset($routeInfo['type'])) {
             return $routeInfo;
         }
 
-        $newRoute = array(
+        return array(
             'type'          => 'Literal',
             'may_terminate' => false,
             'options'       => array(
-                'route' => $routeName, // @todo Allow customisation of intermediate route names.
+                'route' => '/' . $routeName, // @todo Allow customisation of intermediate route names.
             ),
         );
     }
@@ -87,37 +87,36 @@ class AnnotationRouter
     /**
      * Recursively update the route stack.
      *
-     * @param  ArrayObject  $routeList
-     * @param  PriorityList $parent
+     * @todo Typehint routeList, something weird is happening.
+     * @param  ArrayObject $routeList
+     * @param  array       $parent
      * @return RouteInterface
      */
-    protected function recursiveUpdateRoutes(ArrayObject $routeList, PriorityList $parent)
+    protected function recursiveUpdateRoutes($routeList, array &$parent)
     {
         foreach ($routeList as $routeName => $routeInfo) {
-            if (!$parent->get($routeName)) {
-                #continue;
-                //$parent->insert($this->newRoute($routeName, $routeInfo));
+            if (!isset($parent[$routeName])) {
+                $parent[$routeName] = $this->newRoute($routeName, $routeInfo);
             }
 
-            #$route = $parent->get($routeName);
-            #var_dump($route);
-
-            /*
             if (isset($routeInfo['child_routes'])) {
-                $this->recursiveUpdateRoutes($routeInfo['child_routes'], $route);
+                if (!isset($parent[$routeName]['child_routes'])) {
+                    $parent[$routeName]['child_routes'] = array();
+                }
+
+                $this->recursiveUpdateRoutes($routeInfo['child_routes'], $parent[$routeName]['child_routes']);
             }
-            */
         }
     }
 
     /**
      * Parses the route annotations and updates the route stack.
      *
-     * @param  string       $controllers A list of annotated controllers to process.
-     * @param  PriorityList $routes The current routing stack.
+     * @param  string $controllers A list of annotated controllers to process.
+     * @param  array  $config The current routing config.
      * @return void
      */
-    public function updateRoutes(array $controllers, PriorityList $routes)
+    public function updateRouteConfig(array $controllers, array &$config)
     {
         $routeList = new ArrayObject();
 
@@ -125,19 +124,14 @@ class AnnotationRouter
             $this->parseController($controller, $routeList);
         }
 
-        echo "<pre>";
-        //print_r($routeList);
-
-        $this->recursiveUpdateRoutes($routeList, $routes);
-
-        foreach ($routes as $routeName => $route) {
-            echo "ROUTE = " . $routeName . "<br>";
+        if (!sizeof($routeList)) {
+            return;
         }
 
-        echo "</pre>";
+        if (!isset($config['routes'])) {
+            $config['routes'] = array();
+        }
 
-        exit();
-
-        // @todo update the routes with the new config
+        $this->recursiveUpdateRoutes($routeList, $config['routes']);
     }
 }
