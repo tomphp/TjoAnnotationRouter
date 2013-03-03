@@ -36,13 +36,12 @@ class Merger
     /**
      * Recursively update the route stack.
      *
-     * @todo Typehint routeList, something weird is happening.
      * @todo Convert recursion to iteration
      * @param  array $newConfig
      * @param  array $config
      * @return RouteInterface
      */
-    public function merge($newConfig, array &$config)
+    public function merge(array $newConfig, array &$config)
     {
         foreach ($newConfig as $routeName => $routeInfo) {
             if (!isset($config[$routeName])) {
