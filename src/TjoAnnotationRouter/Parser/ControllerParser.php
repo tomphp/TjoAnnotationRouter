@@ -6,6 +6,8 @@ use ArrayObject;
 use TjoAnnotationRouter\Annotation;
 use TjoAnnotationRouter\Exception;
 use Zend\Code\Annotation\AnnotationCollection;
+use Zend\Code\Annotation\AnnotationManager;
+use Zend\Code\Reflection\ClassReflection;
 
 /**
  * Parses the routing annotations for a given controller into Router config.
@@ -15,6 +17,13 @@ use Zend\Code\Annotation\AnnotationCollection;
 class ControllerParser
 {
     /**
+     * The ZF2 annotation manager.
+     *
+     * @var AnnotationManager
+     */
+    protected $annotationManager;
+
+    /**
      * The name of the controller
      *
      * @var string
@@ -22,9 +31,43 @@ class ControllerParser
     protected $controllerName;
 
     /**
+     * The name that all routes for this controller will exist under.
+     *
      * @var string
      */
     protected $baseName = null;
+
+    /**
+     * Inject the required objects.
+     *
+     * @param AnnotationManager $annotationManager
+     */
+    public function __construct(AnnotationManager $annotationManager)
+    {
+        $this->annotationManager = $annotationManager;
+    }
+
+    /**
+     * Builds the config for a controller.
+     *
+     * @param  ClassReflection $reflection
+     * @param  ArrayObject     $config
+     * @return void
+     */
+    public function parseReflectedController(ClassReflection $reflection, ArrayObject $config)
+    {
+        $annotations = $reflection->getAnnotations($this->annotationManager);
+
+        if ($annotations instanceof AnnotationCollection) {
+            $this->setController($annotations);
+        }
+
+        foreach ($reflection->getMethods() as $method) {
+            $annotations = $method->getAnnotations($this->annotationManager);
+
+            $this->parseMethod($method->getName(), $annotations, $config);
+        }
+    }
 
     /**
      * Set the name of the controller and parse the class annotations.
@@ -33,7 +76,7 @@ class ControllerParser
      * @return void
      * @throws Exception\DomainException
      */
-    public function setController(AnnotationCollection $annotations)
+    protected function setController(AnnotationCollection $annotations)
     {
         $this->baseName = null;
         $this->controllerName = null;
@@ -61,9 +104,10 @@ class ControllerParser
      *
      * @param  string               $name
      * @param  AnnotationCollection $annotations
+     * @param  ArrayObject          $config
      * @return void
      */
-    public function parseMethod(
+    protected function parseMethod(
         $name,
         AnnotationCollection $annotations,
         ArrayObject $config
@@ -117,6 +161,8 @@ class ControllerParser
     }
 
     /**
+     * Navigate through the config try to find the given route leaf.
+     *
      * @param  string $routeName
      * @param  ArrayObject $config
      * @return array

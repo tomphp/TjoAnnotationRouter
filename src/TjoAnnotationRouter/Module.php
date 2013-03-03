@@ -50,10 +50,11 @@ class Module implements
     {
         return array(
             'factories' => array(
-                'TjoAnnotationRouter\AnnotationManager' => 'TjoAnnotationRouter\Service\AnnotationManagerFactory',
-                'TjoAnnotationRouter\AnnotationRouter'  => 'TjoAnnotationRouter\Service\AnnotationRouterFactory',
+                'TjoAnnotationRouter\AnnotationManager'       => 'TjoAnnotationRouter\Service\AnnotationManagerFactory',
+                'TjoAnnotationRouter\AnnotationRouter'        => 'TjoAnnotationRouter\Service\AnnotationRouterFactory',
+                'TjoAnnotationRouter\Parser\ControllerParser' => 'TjoAnnotationRouter\Service\ControllerParserFactory',
                 // Override the built in zf2 router factory
-                'Router'                                => 'TjoAnnotationRouter\Service\RouterFactory',
+                'Router'                                      => 'TjoAnnotationRouter\Service\RouterFactory',
             ),
         );
     }

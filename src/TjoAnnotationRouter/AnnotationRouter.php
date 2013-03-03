@@ -3,10 +3,7 @@
 namespace TjoAnnotationRouter;
 
 use ArrayObject;
-use Zend\Code\Annotation\AnnotationCollection;
-use Zend\Code\Annotation\AnnotationManager;
 use Zend\Code\Reflection\ClassReflection;
-use Zend\Mvc\Router\PriorityList;
 use TjoAnnotationRouter\Config\Merger;
 use TjoAnnotationRouter\Parser\ControllerParser;
 
@@ -18,63 +15,38 @@ use TjoAnnotationRouter\Parser\ControllerParser;
 class AnnotationRouter
 {
     /**
-     * @var AnnotationManager
-     */
-    protected $annotationManager;
-
-    /**
+     * The parser for processing the controller annotations.
+     *
      * @var ControllerParser
      */
     protected $parser;
-    
+
     /**
+     * Merges the new config with the existing config.
+     *
      * @var Merger
      */
     protected $merger;
 
     /**
-     * @param AnnotationManager $annotationManager
-     * @param ControllerParser  $parser
+     * Inject required objects.
+     *
+     * @param ControllerParser $parser
+     * @param Merger           $merger
      */
     public function __construct(
-        AnnotationManager $annotationManager,
         ControllerParser $parser,
         Merger $merger
     ) {
-        $this->annotationManager = $annotationManager;
         $this->parser = $parser;
         $this->merger = $merger;
     }
 
     /**
-     * Builds the config for a controller.
-     *
-     * @param  string $controller
-     * @param  string $config
-     * @return void
-     */
-    protected function parseController($controller, ArrayObject $config)
-    {
-        $reflection  = new ClassReflection($controller);
-
-        $annotations = $reflection->getAnnotations($this->annotationManager);
-
-        if ($annotations instanceof AnnotationCollection) {
-            $this->parser->setController($annotations);
-        }
-
-        foreach ($reflection->getMethods() as $method) {
-            $annotations = $method->getAnnotations($this->annotationManager);
-
-            $this->parser->parseMethod($method->getName(), $annotations, $config);
-        }
-    }
-
-    /**
      * Parses the route annotations and updates the route stack.
      *
-     * @param  string $controllers A list of annotated controllers to process.
-     * @param  array  $config The current routing config.
+     * @param  array $controllers A list of annotated controllers to process.
+     * @param  array $config The current routing config.
      * @return void
      */
     public function updateRouteConfig(array $controllers, array &$config)
@@ -82,7 +54,7 @@ class AnnotationRouter
         $routeList = new ArrayObject();
 
         foreach ($controllers as $controller) {
-            $this->parseController($controller, $routeList);
+            $this->parser->parseReflectedController(new ClassReflection($controller), $routeList);
         }
 
         if (!sizeof($routeList)) {

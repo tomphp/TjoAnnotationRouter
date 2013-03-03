@@ -2,8 +2,8 @@
 
 namespace TjoAnnotationRouter\Service;
 
-use TjoAnnotationRouter\AnnotationRouter;
 use TjoAnnotationRouter\Config\Merger;
+use TjoAnnotationRouter\Parser\ControllerParser;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -12,7 +12,7 @@ use Zend\ServiceManager\ServiceLocatorInterface;
  *
  * @author Tom Oram <tom@x2k.co.uk>
  */
-class AnnotationRouterFactory implements FactoryInterface
+class ControllerParserFactory implements FactoryInterface
 {
     /**
      * Create an instance of {@see AnnotationRouter}
@@ -22,9 +22,8 @@ class AnnotationRouterFactory implements FactoryInterface
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return new AnnotationRouter(
-            $serviceLocator->get('TjoAnnotationRouter\Parser\ControllerParser'),
-            new Merger()
+        return new ControllerParser(
+            $serviceLocator->get('TjoAnnotationRouter\AnnotationManager')
         );
     }
 }
