@@ -9,7 +9,7 @@
 namespace TjoAnnotationRouter\Config;
 
 /**
- * Tests for {@see Merger}
+ * Tests for {@see Merger}.
  *
  * @author Tom Oram <tom@x2k.co.uk>
  */
