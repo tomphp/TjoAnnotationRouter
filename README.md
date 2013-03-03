@@ -1,6 +1,8 @@
 TjoAnnotationRouter
 ===================
 
+[![Build Status](https://travis-ci.org/tomphp/TjoAnnotationRouter.png?branch=master)](https://travis-ci.org/tomphp/TjoAnnotationRouter)
+
 This module allows the use of annotations in your controller classes to
 configure the router.
 
