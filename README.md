@@ -87,6 +87,19 @@ project/module config:
 
 **Note: Here you must use the class name and NOT the controller name specified in your ZF2 config**
 
+Caching
+=======
+
+Parsing the route annotations every request will slow down your application quite significantly. To combat this a
+caching solution is provided. To build the cache simple run the following command from the command line:
+
+`vendor/bin/cache_routes.php`
+
+If you wish, you modify any annotations after building the cache simply run this command again.
+
+If you want to turn off to caching at any time just remove `data/TjoAnnotation/routes.php`.
+
+
 TODO List
 =========
 
@@ -96,7 +109,6 @@ This is currently a very early version of the module. Jobs on my TODO list are:
 * Refactor
 * Bug fix
 * Improve functionality
-* Caching to avoid annotation passing in production
 
 Please comment, suggest, fork, etc.
 
