@@ -21,6 +21,9 @@
             "TjoAnnotationRouter\\": "src/"
         }
     },
+    "bin": [
+        "bin/cache_routes.php"
+    ],
     "require-dev": {
         "phpmd/phpmd" : "1.4.0",
         "squizlabs/php_codesniffer": "1.*"

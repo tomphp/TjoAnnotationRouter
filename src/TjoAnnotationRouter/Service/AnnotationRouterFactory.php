@@ -23,14 +23,18 @@ class AnnotationRouterFactory implements FactoryInterface
     /**
      * Create an instance of {@see AnnotationRouter}
      *
+     * @todo Create an Options class.
      * @param  ServiceLocatorInterface $serviceLocator
      * @return AnnotationRouter
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
+        $config = $serviceLocator->get('Config');
+
         return new AnnotationRouter(
             $serviceLocator->get('TjoAnnotationRouter\Parser\ControllerParser'),
-            new Merger()
+            new Merger(),
+            $config['tjo_annotation_router']['cache_file']
         );
     }
 }

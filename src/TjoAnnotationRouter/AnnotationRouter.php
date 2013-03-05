@@ -35,17 +35,72 @@ class AnnotationRouter
     protected $merger;
 
     /**
+     * The path to the cache file.
+     *
+     * @var string
+     */
+    protected $cacheFilePath;
+
+    /**
      * Inject required objects.
      *
      * @param ControllerParser $parser
      * @param Merger           $merger
+     * @param string           $cacheFilePath
      */
     public function __construct(
         ControllerParser $parser,
-        Merger $merger
+        Merger $merger,
+        $cacheFilePath
     ) {
         $this->parser = $parser;
         $this->merger = $merger;
+        $this->cacheFilePath = $cacheFilePath;
+    }
+
+    /**
+     * Attempt to use cache rather than annotations.
+     *
+     * @todo Should file_exists be called here or is there some ZF mechanism for this?
+     * @param  array $config
+     * @return boolean True if cached config was found.
+     */
+    protected function loadCachedConfig(array &$config)
+    {
+        if (!file_exists($this->cacheFilePath)) {
+            return false;
+        }
+
+        $cachedConfig = include $this->cacheFilePath;
+
+        if (!is_array($cachedConfig) || !sizeof($cachedConfig)) {
+            return false;
+        }
+
+        if (!isset($config['routes'])) {
+            $config['routes'] = array();
+        }
+
+        $this->merger->merge($cachedConfig, $config['routes']);
+
+        return true;
+    }
+
+    /**
+     * Returns the config fetched from the annotations
+     *
+     * @param  array $controllers
+     * @return array
+     */
+    public function getRouteConfig(array $controllers)
+    {
+        $routeList = new ArrayObject();
+
+        foreach ($controllers as $controller) {
+            $this->parser->parseReflectedController(new ClassReflection($controller), $routeList);
+        }
+
+        return $routeList->getArrayCopy();
     }
 
     /**
@@ -57,11 +112,11 @@ class AnnotationRouter
      */
     public function updateRouteConfig(array $controllers, array &$config)
     {
-        $routeList = new ArrayObject();
-
-        foreach ($controllers as $controller) {
-            $this->parser->parseReflectedController(new ClassReflection($controller), $routeList);
+        if ($this->loadCachedConfig($config)) {
+            return;
         }
+
+        $routeList = $this->getRouteConfig($controllers);
 
         if (!sizeof($routeList)) {
             return;
@@ -71,6 +126,6 @@ class AnnotationRouter
             $config['routes'] = array();
         }
 
-        $this->merger->merge($routeList->getArrayCopy(), $config['routes']);
+        $this->merger->merge($routeList, $config['routes']);
     }
 }
