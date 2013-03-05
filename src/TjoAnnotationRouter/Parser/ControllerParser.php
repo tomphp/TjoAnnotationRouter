@@ -65,6 +65,10 @@ class ControllerParser
         foreach ($reflection->getMethods() as $method) {
             $annotations = $method->getAnnotations($this->annotationManager);
 
+            if (!$annotations instanceof AnnotationCollection) {
+                continue;
+            }
+
             $this->processor->processMethod($method->getName(), $annotations, $config);
         }
     }
