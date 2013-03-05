@@ -8,7 +8,6 @@
 
 namespace TjoAnnotationRouter\Service;
 
-use TjoAnnotationRouter\Config\Merger;
 use TjoAnnotationRouter\Parser\ControllerAnnotationProcessor;
 use TjoAnnotationRouter\Parser\ControllerParser;
 use Zend\ServiceManager\FactoryInterface;
