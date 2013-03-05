@@ -126,7 +126,7 @@ class MergerTest extends \PHPUnit_Framework_TestCase
         $expected = array(
             'new-branch' => array(
                 'type' => 'Literal',
-                'may_terminate' => false,
+                'may_terminate' => true,
                 'options' => array(
                     'route' => '/new-branch',
                 ),
