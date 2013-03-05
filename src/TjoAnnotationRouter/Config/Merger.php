@@ -32,7 +32,7 @@ class Merger
 
         return array(
             'type'          => 'Literal',
-            'may_terminate' => false,
+            'may_terminate' => true,
             'options'       => array(
                 'route' => '/' . $routeName, // @todo Allow customisation of intermediate route names.
             ),
