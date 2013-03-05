@@ -6,7 +6,7 @@
  * @license http://opensource.org/licenses/MIT The MIT License (MIT)
  */
 
-namespace TjoAnnotationRouter\Annotation\Exception;
+namespace TjoAnnotationRouter\Exception;
 
 /**
  * Domain exception for annotations.
