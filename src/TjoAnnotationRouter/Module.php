@@ -63,8 +63,8 @@ class Module implements
                     $config = $serviceLocator->get('Config');
                     return new Options\Config(
                         isset($config['tjo_annotation_router'])
-                            ? $config['tjo_annotation_router']
-                            : array()
+                        ? $config['tjo_annotation_router']
+                        : array()
                     );
                 },
                 // Override the built in zf2 router factory
