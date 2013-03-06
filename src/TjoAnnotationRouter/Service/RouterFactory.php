@@ -59,10 +59,7 @@ class RouterFactory implements FactoryInterface
             // Add the extra annotation router config
             $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
 
-            $annotationRouter->updateRouteConfig(
-                $config['tjo_annotation_router']['controllers'],
-                $routerConfig
-            );
+            $annotationRouter->updateRouteConfig($routerConfig);
         }
 
         if (isset($routerConfig['route_plugins'])) {

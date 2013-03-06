@@ -30,15 +30,17 @@ $application = Application::init(include 'config/application.config.php');
 
 $serviceLocator = $application->getServiceManager();
 
-$config = $serviceLocator->get('Config');
-$config = $config['tjo_annotation_router'];
+/* @var $config \TjoAnnotationRouter\Options\Config */
+$config = $serviceLocator->get('TjoAnnotationRouter\Options\Config');
 
 /* @var $annotationRouter \TjoAnnotationRouter\AnnotationRouter */
 $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
 
-$routeConfig = $annotationRouter->getRouteConfig($config['controllers']);
+$routeConfig = $annotationRouter->getRouteConfig();
 
-$cacheDir = dirname($config['cache_file']);
+$cacheFile = $config->getCacheFile();
+
+$cacheDir = dirname($cacheFile);
 
 if (!is_dir($cacheDir)) {
     mkdir($cacheDir, 0755, true);
@@ -46,10 +48,10 @@ if (!is_dir($cacheDir)) {
 
 $cacheData = var_export($routeConfig, true);
 
-$fp = fopen(getcwd() . '/' . $config['cache_file'], 'w');
+$fp = fopen(getcwd() . '/' . $cacheFile, 'w');
 
 if (!$fp) {
-    die('Failed to open ' . $config['cache_file'] ." for writing\n" );
+    die('Failed to open ' . $cacheFile ." for writing\n" );
 }
 
 fputs($fp, "<?php\n return $cacheData;\n");

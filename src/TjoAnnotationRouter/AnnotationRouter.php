@@ -11,6 +11,7 @@ namespace TjoAnnotationRouter;
 use ArrayObject;
 use Zend\Code\Reflection\ClassReflection;
 use TjoAnnotationRouter\Config\Merger;
+use TjoAnnotationRouter\Options\Config;
 use TjoAnnotationRouter\Parser\ControllerParser;
 
 /**
@@ -20,6 +21,13 @@ use TjoAnnotationRouter\Parser\ControllerParser;
  */
 class AnnotationRouter
 {
+    /**
+     * The module config.
+     *
+     * @var Config
+     */
+    protected $config;
+
     /**
      * The parser for processing the controller annotations.
      *
@@ -35,27 +43,20 @@ class AnnotationRouter
     protected $merger;
 
     /**
-     * The path to the cache file.
-     *
-     * @var string
-     */
-    protected $cacheFilePath;
-
-    /**
      * Inject required objects.
      *
+     * @param Config           $config
      * @param ControllerParser $parser
      * @param Merger           $merger
-     * @param string           $cacheFilePath
      */
     public function __construct(
+        Config $config,
         ControllerParser $parser,
-        Merger $merger,
-        $cacheFilePath
+        Merger $merger
     ) {
+        $this->config = $config;
         $this->parser = $parser;
         $this->merger = $merger;
-        $this->cacheFilePath = $cacheFilePath;
     }
 
     /**
@@ -67,11 +68,13 @@ class AnnotationRouter
      */
     protected function loadCachedConfig(array &$config)
     {
-        if (!file_exists($this->cacheFilePath)) {
+        $cacheFilePath = $this->config->getCacheFile();
+
+        if (!file_exists($cacheFilePath)) {
             return false;
         }
 
-        $cachedConfig = include $this->cacheFilePath;
+        $cachedConfig = include $cacheFilePath;
 
         if (!is_array($cachedConfig) || !sizeof($cachedConfig)) {
             return false;
@@ -89,14 +92,13 @@ class AnnotationRouter
     /**
      * Returns the config fetched from the annotations
      *
-     * @param  array $controllers
      * @return array
      */
-    public function getRouteConfig(array $controllers)
+    public function getRouteConfig()
     {
         $routeList = new ArrayObject();
 
-        foreach ($controllers as $controller) {
+        foreach ($this->config->getControllers() as $controller) {
             $this->parser->parseReflectedController(new ClassReflection($controller), $routeList);
         }
 
@@ -106,17 +108,16 @@ class AnnotationRouter
     /**
      * Parses the route annotations and updates the route stack.
      *
-     * @param  array $controllers A list of annotated controllers to process.
      * @param  array $config The current routing config.
      * @return void
      */
-    public function updateRouteConfig(array $controllers, array &$config)
+    public function updateRouteConfig(array &$config)
     {
         if ($this->loadCachedConfig($config)) {
             return;
         }
 
-        $routeList = $this->getRouteConfig($controllers);
+        $routeList = $this->getRouteConfig();
 
         if (!sizeof($routeList)) {
             return;

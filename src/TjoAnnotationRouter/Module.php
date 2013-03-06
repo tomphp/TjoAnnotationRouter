@@ -59,6 +59,14 @@ class Module implements
                 'TjoAnnotationRouter\AnnotationManager'       => 'TjoAnnotationRouter\Service\AnnotationManagerFactory',
                 'TjoAnnotationRouter\AnnotationRouter'        => 'TjoAnnotationRouter\Service\AnnotationRouterFactory',
                 'TjoAnnotationRouter\Parser\ControllerParser' => 'TjoAnnotationRouter\Service\ControllerParserFactory',
+                'TjoAnnotationRouter\Options\Config'         => function ($serviceLocator) {
+                    $config = $serviceLocator->get('Config');
+                    return new Options\Config(
+                        isset($config['tjo_annotation_router'])
+                            ? $config['tjo_annotation_router']
+                            : array()
+                    );
+                },
                 // Override the built in zf2 router factory
                 'Router'                                      => 'TjoAnnotationRouter\Service\RouterFactory',
             ),
