@@ -22,7 +22,6 @@ use Zend\Console\Console;
  */
 class RouterFactory implements FactoryInterface
 {
-
     /**
      * Create and return the router
      *

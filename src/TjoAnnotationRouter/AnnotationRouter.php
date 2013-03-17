@@ -66,7 +66,7 @@ class AnnotationRouter
      * @param  array $config
      * @return boolean True if cached config was found.
      */
-    protected function loadCachedConfig(array &$config)
+    public function loadCachedConfig(array &$config)
     {
         $cacheFilePath = $this->config->getCacheFile();
 
@@ -76,7 +76,7 @@ class AnnotationRouter
 
         $cachedConfig = include $cacheFilePath;
 
-        if (!is_array($cachedConfig) || !sizeof($cachedConfig)) {
+        if (!is_array($cachedConfig)) {
             return false;
         }
 
