@@ -119,7 +119,7 @@ class AnnotationRouterTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers TjoAnnotationRouter\Annotation::loadCacheConfig
+     * @covers TjoAnnotationRouter\Annotation::loadCachedConfig
      * @dataProvider cacheConfigProvider
      *
      * @param boolean $expected
