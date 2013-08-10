@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ### Run unit tests
-phpunit
+vendor/bin/phpunit
 PHPUNIT=$?
 
 ### Check coding standards

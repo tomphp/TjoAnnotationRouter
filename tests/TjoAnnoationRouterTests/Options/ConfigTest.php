@@ -23,17 +23,11 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      * @cover TjoAnnotationRouter\Options\Config::__construct
      * @cover TjoAnnotationRouter\Options\Config::getCacheFile
      * @cover TjoAnnotationRouter\Options\Config::setCacheFile
-     * @cover TjoAnnotationRouter\Options\Config::getControllers
-     * @cover TjoAnnotationRouter\Options\Config::setControllers
      */
     public function testConfig()
     {
         $testConfig = array(
             'cache_file'  => '/some/random/path',
-            'controllers' => array(
-                'ControllerOne',
-                'ControllerTwo',
-            ),
         );
 
         $config = new Config($testConfig);
@@ -42,12 +36,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             $testConfig['cache_file'],
             $config->getCacheFile(),
             'Asserting cache_value option is correct.'
-        );
-
-        $this->assertEquals(
-            $testConfig['controllers'],
-            $config->getControllers(),
-            'Asserting controllers option is correct.'
         );
     }
 }

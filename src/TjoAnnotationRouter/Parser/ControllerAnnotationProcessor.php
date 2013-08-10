@@ -37,30 +37,20 @@ class ControllerAnnotationProcessor
     /**
      * Set the name of the controller and parse the class annotations.
      *
+     * @pararm string               $name        The canonical name of the controller.
      * @param  AnnotationCollection $annotations
      * @return void
-     * @throws Exception\DomainException
      */
-    public function processController(AnnotationCollection $annotations)
+    public function processController($name, AnnotationCollection $annotations)
     {
+        $this->controllerName = $name;
+
         $this->baseName = null;
-        $this->controllerName = null;
 
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof Annotation\Controller) {
-                $this->controllerName = $annotation->getName();
-            } elseif ($annotation instanceof Annotation\Base) {
+            if ($annotation instanceof Annotation\Base) {
                 $this->baseName = $annotation->getName();
             }
-        }
-
-        if (null === $this->controllerName) {
-            throw new Exception\DomainException(
-                sprintf(
-                    'Controller %s requires a Controller annotation',
-                    $this->controllerName
-                )
-            );
         }
     }
 

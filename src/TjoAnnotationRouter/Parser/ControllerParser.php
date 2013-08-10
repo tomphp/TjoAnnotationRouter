@@ -48,18 +48,30 @@ class ControllerParser
     }
 
     /**
-     * Builds the config for a controller.
+     * Returns a reflection of the given controller.
      *
-     * @param  ClassReflection $reflection
-     * @param  ArrayObject     $config
+     * @param  mixed $controller Controller name or instance.
      * @return void
      */
-    public function parseReflectedController(ClassReflection $reflection, ArrayObject $config)
+    public function getReflectedController($controller)
+    {
+        return new ClassReflection($controller);
+    }
+
+    /**
+     * Builds the config for a controller.
+     *
+     * @param  string          $name
+     * @param  ClassReflection $reflection
+     * @param  ArrayObject     $config
+     * @return ArrayObject     Returns the config array object.
+     */
+    public function parseReflectedController($name, ClassReflection $reflection, ArrayObject $config)
     {
         $annotations = $reflection->getAnnotations($this->annotationManager);
 
         if ($annotations instanceof AnnotationCollection) {
-            $this->processor->processController($annotations);
+            $this->processor->processController($name, $annotations);
         }
 
         foreach ($reflection->getMethods() as $method) {
@@ -71,5 +83,7 @@ class ControllerParser
 
             $this->processor->processMethod($method->getName(), $annotations, $config);
         }
+
+        return $config;
     }
 }

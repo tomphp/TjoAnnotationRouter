@@ -26,7 +26,6 @@ class AnnotationManagerFactory implements FactoryInterface
     protected $defaultAnnotations = array(
             'Base',
             'Constraint',
-            'Controller',
             'DefaultValue',
             'Route',
     );
