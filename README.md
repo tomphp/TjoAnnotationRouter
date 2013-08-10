@@ -35,7 +35,6 @@ namespace DemoModule\Controller;
 use TjoAnnotationRouter\Annotation as Router;
 
 /**
- * @Router\Controller("DemoModule\Controller\TestController")
  * @Router\Base("demo")
  */
 class TestController extends AbstractActionController
@@ -63,7 +62,6 @@ class TestController extends AbstractActionController
 The Annotations
 ---------------
 
-* `@Router\Controller` - This annotation is needed to tell the router the name of the controller. **Note: This must be the name you have used in the `controllers` section of your config, NOT the class name**
 * `@Router\Base` - Sets the route that all annotated routes fall under. You can use / to specify multiple levels.
 * `@Router\Route` - Sets the route for this action.
 * `@Router\DefaultValue` - Set a default value for a parameter, use one of these annotations for each param you wish to specify a value for.
@@ -72,20 +70,14 @@ The Annotations
 Configuring the module
 ----------------------
 
-The only configuration required is to tell the module which controllers are to
-be parsed by the AnnotationRouter. To do this simply add the following to your
-project/module config:
+Currently the only configuration option available is the path to the cache file.
+If you wish to update this simply add this to your project/module config:
 
 ```php
     'tjo_annotation_router' => array(
-        'controllers' => array(
-            'DemoModule\Controller\TestController',
-            // Add more here if necessary
-        ),
+        'cache_file' => 'path/to/cache/file.php',
     ),
 ```
-
-**Note: Here you must use the class name and NOT the controller name specified in your ZF2 config**
 
 Caching
 =======

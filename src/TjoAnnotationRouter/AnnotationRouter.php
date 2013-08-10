@@ -13,6 +13,7 @@ use Zend\Code\Reflection\ClassReflection;
 use TjoAnnotationRouter\Config\Merger;
 use TjoAnnotationRouter\Options\Config;
 use TjoAnnotationRouter\Parser\ControllerParser;
+use Zend\Mvc\Controller\ControllerManager;
 
 /**
  * Class for building routing config from annotated controller classes.
@@ -43,6 +44,13 @@ class AnnotationRouter
     protected $merger;
 
     /**
+     * This is used to fetch a list of all controllers in the application.
+     *
+     * @var ControllerManager
+     */
+    protected $controllerManager;
+
+    /**
      * Inject required objects.
      *
      * @param Config           $config
@@ -52,11 +60,31 @@ class AnnotationRouter
     public function __construct(
         Config $config,
         ControllerParser $parser,
-        Merger $merger
+        Merger $merger,
+        ControllerManager $controllerManager
     ) {
-        $this->config = $config;
-        $this->parser = $parser;
-        $this->merger = $merger;
+        $this->config            = $config;
+        $this->parser            = $parser;
+        $this->merger            = $merger;
+        $this->controllerManager = $controllerManager;
+    }
+
+    /**
+     * Returns a list of controller names and class names.
+     *
+     * @return array
+     */
+    public function controllerList()
+    {
+        $names = $this->controllerManager->getCanonicalNames();
+
+        $controllers = array();
+
+        foreach ($names as $name) {
+            $controllers[$name] = $this->controllerManager->get($name);
+        }
+
+        return $controllers;
     }
 
     /**
@@ -92,14 +120,19 @@ class AnnotationRouter
     /**
      * Returns the config fetched from the annotations
      *
+     * @param  array The list of controllers keyed by canonical name to generate config for.
      * @return array
      */
-    public function getRouteConfig()
+    public function getRouteConfig(array $controllers)
     {
         $routeList = new ArrayObject();
 
-        foreach ($this->config->getControllers() as $controller) {
-            $this->parser->parseReflectedController(new ClassReflection($controller), $routeList);
+        foreach ($controllers as $name => $controller) {
+            $routeList = $this->parser->parseReflectedController(
+                $name,
+                $this->parser->getReflectedController($controller),
+                $routeList
+            );
         }
 
         return $routeList->getArrayCopy();
@@ -117,7 +150,7 @@ class AnnotationRouter
             return;
         }
 
-        $routeList = $this->getRouteConfig();
+        $routeList = $this->getRouteConfig($this->controllerList());
 
         if (!sizeof($routeList)) {
             return;

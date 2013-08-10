@@ -25,12 +25,6 @@ class Config extends AbstractOptions
     protected $cacheFile;
 
     /**
-     * The list of annotated controllers.
-     * @var array
-     */
-    protected $controllers = array();
-    
-    /**
      * Gets the value for cacheFile.
      *
      * @return string
@@ -49,29 +43,6 @@ class Config extends AbstractOptions
     public function setCacheFile($cacheFile)
     {
         $this->cacheFile = (string) $cacheFile;
-
-        return $this;
-    }
-    
-    /**
-     * Gets the value for controllers.
-     *
-     * @return array
-     */
-    public function getControllers()
-    {
-        return $this->controllers;
-    }
-    
-    /**
-     * Sets the value for controllers.
-     *
-     * @param  array $controllers
-     * @return self
-     */
-    public function setControllers(array $controllers)
-    {
-        $this->controllers = $controllers;
 
         return $this;
     }
