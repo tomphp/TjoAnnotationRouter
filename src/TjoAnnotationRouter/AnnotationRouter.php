@@ -81,7 +81,11 @@ class AnnotationRouter
         $controllers = array();
 
         foreach ($names as $name) {
-            $controllers[$name] = $this->controllerManager->get($name);
+            try {
+                $controllers[$name] = $this->controllerManager->get($name);
+            } catch (\Exception $e) {
+                continue;
+            }
         }
 
         return $controllers;

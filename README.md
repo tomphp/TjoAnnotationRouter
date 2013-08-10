@@ -91,6 +91,22 @@ If you wish, you modify any annotations after building the cache simply run this
 
 If you want to turn off to caching at any time just remove `data/TjoAnnotation/routes.php`.
 
+Issues with other modules
+=========================
+
+BjyAuthorize
+------------
+
+This module uses ZF2's controller manager to fetch the names of the controllers, the manager returns
+the names a lowercase alpha strings with all other characters stripped out. BjyAuthorize is more
+strict about the controller names in it's guard settings so you have to put the ZF version
+in the BjyAuthorize guard config rather than the way you might prefer.
+
+e.g.
+
+Instead of using `Application\Controller\MyController` you have to use
+`applicationcontrollermycontroller`.
+
 
 TODO List
 =========

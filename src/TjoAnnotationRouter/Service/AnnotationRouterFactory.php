@@ -32,7 +32,8 @@ class AnnotationRouterFactory implements FactoryInterface
         return new AnnotationRouter(
             $serviceLocator->get('TjoAnnotationRouter\Options\Config'),
             $serviceLocator->get('TjoAnnotationRouter\Parser\ControllerParser'),
-            new Merger()
+            new Merger(),
+            $serviceLocator->get('ControllerLoader')
         );
     }
 }
