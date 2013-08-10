@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <phpunit
-        bootstrap="./tests/Bootstrap.php"
         colors="true"
         convertErrorsToExceptions="true"
         convertNoticesToExceptions="true"
@@ -11,8 +10,8 @@
         backupGlobals="false"
         syntaxCheck="true"
         >
-    <testsuite name="TjoAnnotationRouter tests">
-        <directory>./tests/src</directory>
+    <testsuite name="UnitTests">
+        <directory>./tests/</directory>
     </testsuite>
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
@@ -20,6 +19,6 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="./clover.xml"/>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
 </phpunit>
