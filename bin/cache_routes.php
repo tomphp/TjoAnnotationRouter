@@ -13,7 +13,7 @@ while (!file_exists('config/application.config.php')) {
 
     if ($previousDir === $dir) {
         throw new RuntimeException(
-            'Unable to locate "config/application.config.php": ' . 
+            'Unable to locate "config/application.config.php": ' .
             'is TjoAnnotationRouter in a subdir of your application skeleton?'
         );
     }
@@ -36,7 +36,7 @@ $config = $serviceLocator->get('TjoAnnotationRouter\Options\Config');
 /* @var $annotationRouter \TjoAnnotationRouter\AnnotationRouter */
 $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
 
-$routeConfig = $annotationRouter->getRouteConfig();
+$routeConfig = $annotationRouter->getRouteConfig($annotationRouter->controllerList());
 
 $cacheFile = $config->getCacheFile();
 

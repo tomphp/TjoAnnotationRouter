@@ -49,12 +49,12 @@ class RouterFactory implements FactoryInterface
             // We are in a console, use console router defaults.
             $routerClass = 'Zend\Mvc\Router\Console\SimpleRouteStack';
             $routerConfig = isset($config['console']['router']) ? $config['console']['router'] : array();
+        } else {
+            // Add the extra annotation router config
+            $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
+
+            $annotationRouter->updateRouteConfig($routerConfig);
         }
-
-        // Add the extra annotation router config
-        $annotationRouter = $serviceLocator->get('TjoAnnotationRouter\AnnotationRouter');
-
-        $annotationRouter->updateRouteConfig($routerConfig);
 
         // Obtain the configured router class, if any
         if (isset($routerConfig['router_class']) && class_exists($routerConfig['router_class'])) {
